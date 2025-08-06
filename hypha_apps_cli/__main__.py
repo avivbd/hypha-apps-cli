@@ -385,6 +385,11 @@ def _process_file(path: Path, base_path: Path, module_name: str, is_package: boo
             import_suffix = PurePosixPath(relative_path).with_suffix('').as_posix().replace('/', '.')
             import_path = f"{base}.{import_suffix}".strip('.')
             file_data["import_path"] = import_path
+        else:
+            import_path = ""
+
+        if import_path:
+            print("Check your import paths", import_path)
 
         return file_data
     except ValueError:
