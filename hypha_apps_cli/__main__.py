@@ -14,8 +14,8 @@ import yaml
 import glob
 from pathlib import PurePosixPath
 
-DEFAULT_IGNORED_DIRS = {"__pycache__", ".git", ".venv", ".idea", ".pytest_cache", ".mypy_cache", "build", "dist", "__pypackages__"}
-DEFAULT_IGNORED_FILES = {".DS_Store", ".gitignore", ".gitattributes"}
+DEFAULT_IGNORED_DIRS = {"__pycache__", ".git", ".venv", ".idea", ".pytest_cache", ".mypy_cache", "__pypackages__"}
+DEFAULT_IGNORED_FILES = {".DS_Store", ".gitignore", ".gitattributes", ".env", ".env.local", ".env.development", ".env.production"}
 DEFAULT_IGNORED_SUFFIXES = {".pyc", ".pyo", ".swp", ".tmp", ".bak"}
 
 
@@ -341,14 +341,13 @@ def _should_ignore(path: Path) -> bool:
     Returns:
         True if the file or directory should be skipped
     """
-    name = path.name
 
-    # Ignore files or dirs by exact name
-    if name in DEFAULT_IGNORED_FILES or name in DEFAULT_IGNORED_DIRS:
+    # Ignore files or dirs by exact path
+    if any([ignore_dir in str(path) for ignore_dir in DEFAULT_IGNORED_DIRS]) or any([ignore_file in str(path) for ignore_file in DEFAULT_IGNORED_FILES]):
         return True
 
     # Ignore by suffix
-    if any(str(name).endswith(suffix) for suffix in DEFAULT_IGNORED_SUFFIXES):
+    if any(str(path).endswith(suffix) for suffix in DEFAULT_IGNORED_SUFFIXES):
         return True
 
     return False
